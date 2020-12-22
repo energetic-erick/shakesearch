@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -36,6 +37,7 @@ func main() {
 	}
 }
 
+// Searcher is a struct to store supporting data for the server
 type Searcher struct {
 	CompleteWorks string
 	SuffixArray   *suffixarray.Index
@@ -63,6 +65,7 @@ func handleSearch(searcher Searcher) func(w http.ResponseWriter, r *http.Request
 	}
 }
 
+// Load the dataset from a given file at server setup
 func (s *Searcher) Load(filename string) error {
 	dat, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -73,7 +76,11 @@ func (s *Searcher) Load(filename string) error {
 	return nil
 }
 
+// Search the complete works for a given query
 func (s *Searcher) Search(query string) []string {
+	// Note: there are no lines longer than 100 characters in the corpus, so the 250 character slice will work fine here (will always have some leading text)
+	leadingTrim, _ := regexp.Compile(`^[^\n]*\n*`)
+	trailingTrim, _ := regexp.Compile(`\n*[^\n]*$`)
 	queryBytes := []byte(strings.ToLower(query))
 	idxs := s.SuffixArray.Lookup(queryBytes, -1)
 	results := []string{}
@@ -81,9 +88,13 @@ func (s *Searcher) Search(query string) []string {
 		lowerLimit := max(0, idx-250)
 		upperLimit := min(idx+250, len(s.CompleteWorks))
 
-		lookbehind := s.CompleteWorks[lowerLimit:idx]
+		lookbehindRaw := s.CompleteWorks[lowerLimit:idx]
+		lookbehind := leadingTrim.ReplaceAllString(lookbehindRaw, "")
+
 		word := s.CompleteWorks[idx : idx+len(query)]
-		lookahead := s.CompleteWorks[idx+len(query) : upperLimit]
+
+		lookaheadRaw := s.CompleteWorks[idx+len(query) : upperLimit]
+		lookahead := trailingTrim.ReplaceAllString(lookaheadRaw, "")
 
 		curr := fmt.Sprintf("%s<strong>%s</strong>%s", lookbehind, word, lookahead)
 		results = append(results, curr)

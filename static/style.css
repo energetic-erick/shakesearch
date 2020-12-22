@@ -169,6 +169,13 @@ textarea {
   clear: both;
 }
 
+table {
+  border-spacing: 0px;
+}
+td {
+  border-top: 1px solid black;
+}
+
 /* ==========================================================================
      EXAMPLE Media Queries for Responsive Design.
      These examples override the primary ('mobile first') styles.
