@@ -89,6 +89,7 @@ created by net/http.(*Server).Serve
 [x] Fix OOB bug resulting in server panic
 [x] Case-insensitive queries (index lowercase, search lowercase)
 [ ] Highlighting search terms with `<strong>`
+[ ] Prevent slicing in middle of runes/words
 [ ] Combine nearby results
 [ ] Index by work (parsing script to split up by work + show results by work)
 
