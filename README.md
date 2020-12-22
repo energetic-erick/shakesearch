@@ -87,7 +87,7 @@ created by net/http.(*Server).Serve
 
 [x] Check for encoding bugs + read up on runes vs. chars in golang --> looks like it's actually ok as-is
 [x] Fix OOB bug resulting in server panic
-[ ] Case-insensitive queries (index lowercase, search lowercase)
+[x] Case-insensitive queries (index lowercase, search lowercase)
 [ ] Highlighting search terms with `<strong>`
 [ ] Combine nearby results
 [ ] Index by work (parsing script to split up by work + show results by work)
