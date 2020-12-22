@@ -85,13 +85,13 @@ created by net/http.(*Server).Serve
 
 ## Improvements to implement
 
-[x] Check for encoding bugs + read up on runes vs. chars in golang --> looks like it's actually ok as-is
-[x] Fix OOB bug resulting in server panic
-[x] Case-insensitive queries (index lowercase, search lowercase)
-[x] Highlighting search terms with `<strong>`
-[x] Prevent slicing in middle of runes/words
-[x] Separate lines in UI and prevent slicing in the middles of lines if possible
-[x] Combine nearby results
+- [x] Check for encoding bugs + read up on runes vs. chars in golang --> looks like it's actually ok as-is
+- [x] Fix OOB bug resulting in server panic
+- [x] Case-insensitive queries (index lowercase, search lowercase)
+- [x] Highlighting search terms with `<strong>`
+- [x] Prevent slicing in middle of runes/words
+- [x] Separate lines in UI and prevent slicing in the middles of lines if possible
+- [x] Combine nearby results
 
 ## Improvements to propose for future
 
