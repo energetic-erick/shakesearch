@@ -76,7 +76,21 @@ func (s *Searcher) Search(query string) []string {
 	idxs := s.SuffixArray.Lookup([]byte(query), -1)
 	results := []string{}
 	for _, idx := range idxs {
-		results = append(results, s.CompleteWorks[idx-250:idx+250])
+		results = append(results, s.CompleteWorks[max(0, idx-250):min(idx+250, len(s.CompleteWorks))])
 	}
 	return results
+}
+
+func min(a int, b int) int {
+	if a > b {
+		return b
+	}
+	return a
+}
+
+func max(a int, b int) int {
+	if a > b {
+		return a
+	}
+	return b
 }
