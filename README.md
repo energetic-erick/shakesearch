@@ -100,3 +100,9 @@ created by net/http.(*Server).Serve
 - Show the act/scene/line citation information too. Requires expanding on the parser. Important for student doing research
 - Index by work (parsing script to split up by work + show results by work)
 - Replace certain special characters with how people would search them (e.g. apostrophes and directional apostrophes)
+
+### How I would prioritize these improvements
+
+I made a lot of user assumptions in this particular implementation :)
+
+If I were to actually prioritize them, I would want to start by asking a few questions that get at some of the context of why this app is important to the company. If it's just a prototype, things like tests become less important. If it's a system we'd like to have 1M simultaneous users on tomorrow, setting up the replicated servers would be more important (listed in the brainstorm). If it's a "normal development app with a semi-flexible timeline," as with most projects I've worked on in the past, I would try to write up an actual target user persona, which I would use to weigh importance of different features, which I would use to communicate my plan (and why I planned it as such) to a few of my coworkers before proceeding because their input is valuable to me (educationally as well as to the project).
