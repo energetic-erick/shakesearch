@@ -91,11 +91,12 @@ created by net/http.(*Server).Serve
 [x] Highlighting search terms with `<strong>`
 [x] Prevent slicing in middle of runes/words
 [x] Separate lines in UI and prevent slicing in the middles of lines if possible
-[ ] Combine nearby results
-[ ] Index by work (parsing script to split up by work + show results by work)
+[x] Combine nearby results
 
 ## Improvements to propose for future
 
 - Real levenshtein-distance matching with an index + unicode similarities like "ae" <> "æ"
 - Tests -- make it tolerant to future changes
 - Show the act/scene/line citation information too. Requires expanding on the parser. Important for student doing research
+- Index by work (parsing script to split up by work + show results by work)
+- Replace certain special characters with how people would search them (e.g. apostrophes and directional apostrophes)

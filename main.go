@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"sort"
 	"strings"
 )
 
@@ -76,29 +77,67 @@ func (s *Searcher) Load(filename string) error {
 	return nil
 }
 
+func groupIdxs(idxs []int, mergeTolerance int) [][]int {
+	rtn := [][]int{}
+	sort.Ints(idxs)
+	lastIdx := -1 - mergeTolerance
+	curr := []int{}
+	for _, idx := range idxs {
+		if lastIdx+mergeTolerance < idx {
+			// start anew
+			if len(curr) > 0 {
+				rtn = append(rtn, curr)
+				curr = []int{}
+			}
+		}
+		curr = append(curr, idx)
+		lastIdx = idx
+	}
+	if len(curr) > 0 {
+		rtn = append(rtn, curr)
+	}
+	return rtn
+}
+
+func (s *Searcher) formatGroup(group []int, queryLen int, lookaround int) string {
+	if len(group) == 0 {
+		return ""
+	}
+
+	rtn := ""
+	lastIndex := max(0, group[0]-lookaround)
+	for _, idx := range group {
+		lookbehind := s.CompleteWorks[lastIndex:idx]
+		word := s.CompleteWorks[idx : idx+queryLen]
+		rtn += fmt.Sprintf("%s<strong>%s</strong>", lookbehind, word)
+		lastIndex = idx + queryLen
+	}
+	lookaheadLimit := min(len(s.CompleteWorks), lastIndex+lookaround)
+	rtn += s.CompleteWorks[lastIndex:lookaheadLimit]
+
+	// Note: there are no lines longer than 100 characters in the corpus, so the 250 character slice will work fine here (will always have some leading text)
+	trim, _ := regexp.Compile(`^[^\n]*\n*|\n*[^\n]*$`)
+	rtn = trim.ReplaceAllString(rtn, "")
+	return rtn
+}
+
 // Search the complete works for a given query
 func (s *Searcher) Search(query string) []string {
-	// Note: there are no lines longer than 100 characters in the corpus, so the 250 character slice will work fine here (will always have some leading text)
-	leadingTrim, _ := regexp.Compile(`^[^\n]*\n*`)
-	trailingTrim, _ := regexp.Compile(`\n*[^\n]*$`)
 	queryBytes := []byte(strings.ToLower(query))
 	idxs := s.SuffixArray.Lookup(queryBytes, -1)
 	results := []string{}
-	for _, idx := range idxs {
-		lowerLimit := max(0, idx-250)
-		upperLimit := min(idx+250, len(s.CompleteWorks))
 
-		lookbehindRaw := s.CompleteWorks[lowerLimit:idx]
-		lookbehind := leadingTrim.ReplaceAllString(lookbehindRaw, "")
+	lookaround := 250
+	mergeTolerance := lookaround*2 + len(query)
+	idxsGrouped := groupIdxs(idxs, mergeTolerance)
 
-		word := s.CompleteWorks[idx : idx+len(query)]
+	fmt.Println(idxsGrouped)
 
-		lookaheadRaw := s.CompleteWorks[idx+len(query) : upperLimit]
-		lookahead := trailingTrim.ReplaceAllString(lookaheadRaw, "")
-
-		curr := fmt.Sprintf("%s<strong>%s</strong>%s", lookbehind, word, lookahead)
+	for _, group := range idxsGrouped {
+		curr := s.formatGroup(group, len(query), lookaround)
 		results = append(results, curr)
 	}
+
 	return results
 }
 
