@@ -78,7 +78,15 @@ func (s *Searcher) Search(query string) []string {
 	idxs := s.SuffixArray.Lookup(queryBytes, -1)
 	results := []string{}
 	for _, idx := range idxs {
-		results = append(results, s.CompleteWorks[max(0, idx-250):min(idx+250, len(s.CompleteWorks))])
+		lowerLimit := max(0, idx-250)
+		upperLimit := min(idx+250, len(s.CompleteWorks))
+
+		lookbehind := s.CompleteWorks[lowerLimit:idx]
+		word := s.CompleteWorks[idx : idx+len(query)]
+		lookahead := s.CompleteWorks[idx+len(query) : upperLimit]
+
+		curr := fmt.Sprintf("%s<strong>%s</strong>%s", lookbehind, word, lookahead)
+		results = append(results, curr)
 	}
 	return results
 }
