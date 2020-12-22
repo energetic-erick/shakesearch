@@ -42,7 +42,7 @@ and prioritize your changes according to what you think is most useful.
 - Performance: query run times, server startup times, concurrency, pagination, alternative data structures
 - UX: autosuggest, live(ish) results, case-insensitive, wrapping lines, fuzzy match, show where it is, combine nearby results, index by play + act + scene instead of lines/character numbers
 - UI: make it prettier (not focus of this exercise), highlight search terms
-- Bugs: panic when finding something at the beginning or end (250 characters both ends)
+- Bugs: panic when finding something at the beginning or end (250 characters both ends), check for encoding bugs (looks like there are some fun utf-8 characters in file)
 - Tests: no tests currently
 
 ```
@@ -85,6 +85,7 @@ created by net/http.(*Server).Serve
 
 ## Improvements to implement
 
+[ ] Check for encoding bugs + read up on runes vs. chars in golang
 [ ] Fix OOB bug resulting in server panic
 [ ] Case-insensitive queries (index lowercase, search lowercase)
 [ ] Highlighting search terms with `<strong>`
