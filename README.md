@@ -85,7 +85,7 @@ created by net/http.(*Server).Serve
 
 ## Improvements to implement
 
-[ ] Check for encoding bugs + read up on runes vs. chars in golang
+[x] Check for encoding bugs + read up on runes vs. chars in golang --> looks like it's actually ok as-is
 [ ] Fix OOB bug resulting in server panic
 [ ] Case-insensitive queries (index lowercase, search lowercase)
 [ ] Highlighting search terms with `<strong>`
@@ -94,6 +94,6 @@ created by net/http.(*Server).Serve
 
 ## Improvements to propose for future
 
-- Real levenshtein-distance matching with an index
+- Real levenshtein-distance matching with an index + unicode similarities like "ae" <> "æ"
 - Tests -- make it tolerant to future changes
 - Show the act/scene/line citation information too. Requires expanding on the parser. Important for student doing research
